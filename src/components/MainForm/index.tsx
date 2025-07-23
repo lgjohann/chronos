@@ -6,15 +6,19 @@ import { DefaultButton } from '../DefaultButton';
 import { DefaultInput } from '../DefaultInput';
 
 export function MainForm() {
+  function handleCreateNewTask(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    console.log('Nova tarefa criada');
+  }
+
   return (
-    <form className={styles.form} action=''>
+    <form onSubmit={handleCreateNewTask} className={styles.form} action=''>
       <div className={styles.formRow}>
         <DefaultInput
           labelText='task'
           id='taskInput'
           type='text'
-          placeholder='Digite algo'
-          defaultValue={'Valor preenchido'}
+          placeholder='Digite algo...'
         />
       </div>
 

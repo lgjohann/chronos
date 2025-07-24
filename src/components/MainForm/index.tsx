@@ -5,12 +5,47 @@ import { Cycles } from '../Cycles';
 import { DefaultButton } from '../DefaultButton';
 import { DefaultInput } from '../DefaultInput';
 import { useState } from 'react';
+import type { TaskModel } from '../../models/TaskModel';
+import { useTaskContext } from '../../contexts/TaskContext/useTaskContext';
 
 export function MainForm() {
-  const [taskName, setTaskName] = useState('');
+  const { setState } = useTaskContext();
+  const [taskName, setTaskName] = useState<string>('');
 
   function handleCreateNewTask(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (taskName.trim() === '') {
+      alert('Por favor, digite uma tarefa válida.');
+      return;
+    }
+
+    const taskNameValue = taskName.trim();
+
+    const newTask: TaskModel = {
+      id: Date.now().toString(),
+      name: taskNameValue,
+      startDate: Date.now(),
+      completeDate: null,
+      interruptDate: null,
+      duration: 1,
+      type: 'workTime',
+    };
+
+    const secondsRemaining = newTask.duration * 60;
+
+    setState(prevState => {
+      return {
+        ...prevState,
+        activeTask: newTask,
+        currentCycle: 1, // Conferir
+        secondsRemaining, // Conferir
+        formattedSecondsRemaining: '00:00', // Conferir
+        tasks: [...prevState.tasks, newTask],
+      };
+    });
+
+    setTaskName('');
   }
 
   return (
